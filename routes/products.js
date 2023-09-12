@@ -7,6 +7,8 @@ router.get('/', (req, res) => {
   try {
     const productsData = fs.readFileSync('productos.json', 'utf-8');
     const products = JSON.parse(productsData);
+    const limit = req.query.limit ? parseInt(req.query.limit) : products.length;
+    const limitedProducts = products.slice(0, limit);
     res.json(products);
   } catch (error) {
     console.error(error);
@@ -16,7 +18,7 @@ router.get('/', (req, res) => {
 
 // Ruta GET /api/products/:pid
 router.get('/:pid', (req, res) => {
-  const productId = req.params.pid;
+  const productId = parseInt(req.params.pid);
   try {
     const productsData = fs.readFileSync('productos.json', 'utf-8');
     const products = JSON.parse(productsData);
@@ -91,3 +93,7 @@ router.delete('/:pid', (req, res) => {
 });
 
 module.exports = router;
+
+function generateUniqueId() {
+  return Date.now();
+}
